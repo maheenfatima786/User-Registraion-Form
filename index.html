@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="stylesheet.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Input Validation Form</title>
+</head>
+<body>
+<div class="card">
+<h1>Sign Up </h1>
+<form>
+    <input type="text" id="fullname" name="fullname"  placeholder="Full Name">
+    <span id="nameerror"></span>
+    <input type="text" id="email" name="email"  placeholder="Email Address">
+    <span id="emailerror"></span>
+    <input type="password" id="pass" name="pass"  placeholder="Password">
+    <span id="passerror"></span>
+    <input type="password" id="cpass" name="cpass"  placeholder="Confirm Password">
+    <span id="cpasserror"></span>
+    <input type="text" id="phone" name="phone"  placeholder="Phone Number (Optional)">
+    <span id="numerror"></span>
+    <button type="submit">Submit</button>
+</form>
+<div id="success" style="color:green; margin-top:10px;"></div>
+<script>    
+document.getElementById("fullname").onblur=function(){
+let fullname=this.value.trim();
+const nameerror=document.getElementById("nameerror");
+
+        if(fullname==="")
+    {
+        nameerror.textContent="Name is required";
+    }else if(fullname.length<3)
+    {
+        nameerror.textContent="Name must be at least 3 characters";
+    }else{
+        nameerror.textContent="";
+    }
+}
+document.getElementById("email").onblur=function(){
+let email=this.value.trim();
+let emailerror=document.getElementById("emailerror");
+let pattern=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(email==="")
+    {
+       emailerror.textContent="Email is required";
+    }else if(!pattern.test(email))
+    {
+        emailerror.textContent="Enter a valid Email address";
+    }else{
+        emailerror.textContent="";
+    }
+    }
+    document.getElementById("pass").onblur=function(){
+let pass=this.value.trim();
+let passerror=document.getElementById("passerror");
+let upper=/[A-Z]/.test(pass);
+let lower=/[a-z]/.test(pass);
+let number=/[0-9]/.test(pass);
+    if(pass==="")
+    {
+       passerror.textContent="Password is required";
+    }else if(pass.length<6)
+    {
+       passerror.textContent="Password must be at least 6 characters"
+    }
+    else if(!upper || !lower || !number)
+    {
+        passerror.textContent="Password must contain 1 uppercase 1 lowercase and 1 number";
+    }else{
+        passerror.textContent="";
+    }
+    }
+document.getElementById("cpass").onblur=function(){
+let cpass=this.value.trim();
+let pass=document.getElementById("pass").value.trim();
+let cpasserror=document.getElementById("cpasserror");
+    if(cpass==="")
+    {
+       cpasserror.textContent="Confirm Password id required";
+    }else if(cpass!==pass)
+    {
+        cpasserror.textContent="Passwords do not match";
+    }else{
+        cpasserror.textContent="";
+    }
+    }
+document.getElementById("phone").onblur=function(){
+let phone=this.value.trim();
+let numerror=document.getElementById("numerror");
+    if(phone==="")
+    {
+       numerror.textContent="";
+    }
+    if(!/^[0-9]+$/.test(phone))
+    {
+        numerror.textContent="Phone number must be only digits"
+    }
+    else if(phone.length<10 || phone.length>15)
+    {
+        numerror.textContent="Phone number must be 10 to 15 digits";
+    }
+    else{
+        numerror.textContent="";
+    }
+}
+function downloadFile(data, filename) {
+    const blob = new Blob([data], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+    document.querySelector("form").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const errors=document.querySelectorAll("span");
+    let haserror=false;
+    errors.forEach(span=>{
+        if(span.textContent!=="") haserror = true;
+    });
+
+    if(haserror){
+        alert("Please fix errors before submitting");
+
+    }
+    else{
+        document.getElementById("success").textContent="Form Submitted successfully";
+        const data = `
+        Full Name: ${document.getElementById("fullname").value}
+        Email: ${document.getElementById("email").value}
+        Password: ${document.getElementById("pass").value}
+        Phone: ${document.getElementById("phone").value}
+        `;
+        downloadFile(data,"UserInfo.txt");
+    }
+});
+
+</script>
+</div>
+</body>
+</html>
