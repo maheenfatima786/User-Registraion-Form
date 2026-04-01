@@ -9,28 +9,26 @@
 <div class="card">
 <h1>Sign Up </h1>
 <form>
-    <input type="text" id="fullname" name="fullname"  placeholder="Full Name">
+    <input type="text" id="fullname" name="fullname"  placeholder="Full Name" required>
     <span id="nameerror"></span>
-    <input type="text" id="email" name="email"  placeholder="Email Address">
+    <input type="email" id="email" name="email"  placeholder="Email Address" required>
     <span id="emailerror"></span>
-    <input type="password" id="pass" name="pass"  placeholder="Password">
+    <input type="password" id="pass" name="pass"  placeholder="Password" required>
     <span id="passerror"></span>
-    <input type="password" id="cpass" name="cpass"  placeholder="Confirm Password">
+    <input type="password" id="cpass" name="cpass"  placeholder="Confirm Password" required>
     <span id="cpasserror"></span>
-    <input type="text" id="phone" name="phone"  placeholder="Phone Number (Optional)">
+    <input type="tel" id="phone" name="phone"  placeholder="Phone Number (Optional)">
     <span id="numerror"></span>
     <button type="submit">Submit</button>
 </form>
+<div id="formerror" style="color:red; margin-top:10px;"></div>
 <div id="success" style="color:#003334; margin-top:10px;"></div>
 <script>    
 document.getElementById("fullname").onblur=function(){
 let fullname=this.value.trim();
 const nameerror=document.getElementById("nameerror");
-
-        if(fullname==="")
-    {
-        nameerror.textContent="Name is required";
-    }else if(fullname.length<3)
+    
+    if(fullname.length<3)
     {
         nameerror.textContent="Name must be at least 3 characters";
     }else{
@@ -41,10 +39,7 @@ document.getElementById("email").onblur=function(){
 let email=this.value.trim();
 let emailerror=document.getElementById("emailerror");
 let pattern=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(email==="")
-    {
-       emailerror.textContent="Email is required";
-    }else if(!pattern.test(email))
+    if(!pattern.test(email))
     {
         emailerror.textContent="Enter a valid Email address";
     }else{
@@ -57,10 +52,7 @@ let passerror=document.getElementById("passerror");
 let upper=/[A-Z]/.test(pass);
 let lower=/[a-z]/.test(pass);
 let number=/[0-9]/.test(pass);
-    if(pass==="")
-    {
-       passerror.textContent="Password is required";
-    }else if(pass.length<6)
+    if(pass.length<6)
     {
        passerror.textContent="Password must be at least 6 characters"
     }
@@ -88,9 +80,9 @@ let cpasserror=document.getElementById("cpasserror");
 document.getElementById("phone").onblur=function(){
 let phone=this.value.trim();
 let numerror=document.getElementById("numerror");
-    if(phone==="")
-    {
-       numerror.textContent="";
+    if(phone===""){
+        numerror.textContent="";
+        return;
     }
     if(!/^[0-9]+$/.test(phone))
     {
@@ -120,12 +112,13 @@ function downloadFile(data, filename) {
     errors.forEach(span=>{
         if(span.textContent!=="") haserror = true;
     });
-
+    const formerror = document.getElementById("formerror");
     if(haserror){
-        alert("Please fix errors before submitting");
+        formerror.textContent = "Please fix errors before submitting";
 
     }
     else{
+        formerror.textContent = "";
         document.getElementById("success").textContent="Form Submitted successfully";
         const data = `
         Full Name: ${document.getElementById("fullname").value}
@@ -134,6 +127,7 @@ function downloadFile(data, filename) {
         Phone: ${document.getElementById("phone").value}
         `;
         downloadFile(data,"UserInfo.txt");
+
     }
 });
 
